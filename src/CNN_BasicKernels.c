@@ -4409,7 +4409,7 @@ void __attribute__ ((noinline)) KerLinearLayer_fp(KerLinearLayer_fpT *Arg) {
 
 		if(CoreId==0) {
 
-			Acc = (Bias[i]<<NormBias);
+			Acc = (Bias[i]<<NormFilter);
 
 			if(InSize%2) Acc += In[InSize-1]*Filter[i*InSize+InSize-1];
 
@@ -4496,7 +4496,7 @@ void __attribute__ ((noinline)) KerLinearLayerParOut_fp(KerLinearLayer_fpT *Arg)
 		int Acc = 0;
 		for (j = 0; j<(InSize/2); j++) Acc = gap8_sumdotp2(VectIn[j], Filt[j], Acc);
 		if (InSize%2) Acc += In[InSize-1]*Filter[i*InSize+InSize-1];
-		Acc += (Bias[i]<<NormBias);
+		Acc += (Bias[i]<<NormFilter);
 		Out[i] = gap8_clip(gap8_roundnorm_reg(Acc, NormFilter), 15);
 	}
 	wait_synch_barrier();
@@ -4540,7 +4540,7 @@ void __attribute__ ((noinline)) KerLinearLayer_fpd(KerLinearLayer_fpdT *Arg)
 		Reduct[CoreId] = Acc;
 		wait_synch_barrier();
 		if (CoreId==0) {
-			Acc = (Bias[i]<<NormBias);
+			Acc = (Bias[i]<<NormFilter);
 			if (InSize%2) Acc += In[InSize-1]*Filter[i*InSize+InSize-1];
 			for (j=0;j<gap8_ncore();j++) Acc += Reduct[j];
 			Out[i] = gap8_roundnorm_reg(Acc, NormFilter);
@@ -4595,7 +4595,7 @@ void __attribute__ ((noinline)) KerLinearLayer_fps(KerLinearLayer_fpsT *Arg)
 		Reduct[CoreId] = Acc;
 		wait_synch_barrier();
 		if (CoreId==0) {
-			Acc = (Bias[i]<<NormBias);
+			Acc = (Bias[i]<<NormFilter);
 			// if (InSize%2) Acc += In[InSize-1]* (*Filt1);
 			if (InSize%2) Acc += In[InSize-1]* Filter[InSize*i + InSize-1]; // [InSize-1];
 			for (j=0;j<gap8_ncore();j++) Acc += Reduct[j];
@@ -4653,7 +4653,7 @@ void __attribute__ ((noinline)) KerLinearLayerReLU_fps(KerLinearLayer_fpsT *Arg)
 		Reduct[CoreId] = Acc;
 		wait_synch_barrier();
 		if (CoreId==0) {
-			Acc = (Bias[i]<<NormBias);
+			Acc = (Bias[i]<<NormFilter);
 			// if (InSize%2) Acc += In[InSize-1]* (*Filt1);
 			if (InSize%2) Acc += In[InSize-1]* Filter[InSize*i + InSize-1]; // [InSize-1];
 			for (j=0;j<gap8_ncore();j++) Acc += Reduct[j];
@@ -4715,7 +4715,7 @@ void __attribute__ ((noinline)) KerLinearLayerReLU_fp(KerLinearLayer_fpT *Arg) {
 		Reduct[CoreId] = Acc;
 		wait_synch_barrier();
 		if (CoreId==0) {
-			Acc = (Bias[i]<<NormBias);
+			Acc = (Bias[i]<<NormFilter);
 			if (InSize%2) Acc += In[InSize-1]*Filter[i*InSize+InSize-1];
 			for (j=0;j<gap8_ncore();j++) Acc += Reduct[j];
 			Out[i] = Max(gap8_clip(gap8_roundnorm_reg(Acc, NormFilter), 15), 0);
@@ -4774,7 +4774,7 @@ void __attribute__ ((noinline)) KerLinearLayerReLU_fpd(KerLinearLayer_fpdT *Arg)
 		Reduct[CoreId] = Acc;
 		wait_synch_barrier();
 		if (CoreId==0) {
-			Acc = (Bias[i]<<NormBias);
+			Acc = (Bias[i]<<NormFilter);
 			if (InSize%2) Acc += In[InSize-1]*Filter[i*InSize+InSize-1];
 			for (j=0;j<gap8_ncore();j++) Acc += Reduct[j];
 			Out[i] = gap8_roundnorm_reg(Acc, NormFilter);
